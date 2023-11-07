@@ -1,7 +1,7 @@
-import {Animated, Dimensions} from 'react-native';
-import React, {useRef} from 'react';
-import createStyle from './spinner.styles';
-import SpinnerProps from './interfaces';
+import {Animated, Dimensions} from "react-native";
+import React, {useRef} from "react";
+import createStyle from "./spinner.styles";
+import SpinnerProps from "./interfaces";
 
 const spinner = ({
   data,
@@ -13,11 +13,12 @@ const spinner = ({
   itemStyle = {},
   itemHeightPrecentageFromHeight = 0.4,
   itemwidthPrecentageFromWidth = 0.4,
-  itemVerticalRotationDegreeRange = ['-40deg', '0deg', '40deg'],
-  itemHorizontalRotationDegreeRange = ['60deg', '0deg', '-60deg'],
+  itemVerticalRotationDegreeRange = ["-40deg", "0deg", "40deg"],
+  itemHorizontalRotationDegreeRange = ["60deg", "0deg", "-60deg"],
   ItemView,
+  onSelectItem,
 }: SpinnerProps) => {
-  const {width} = Dimensions.get('window');
+  const {width} = Dimensions.get("window");
   const itemSize = isHorizontal
     ? width * itemwidthPrecentageFromWidth
     : height * itemHeightPrecentageFromHeight;
@@ -30,14 +31,25 @@ const spinner = ({
   });
   const scrollRefY = useRef(new Animated.Value(0)).current;
   const scrollRefX = useRef(new Animated.Value(0)).current;
+  const currentSelectedIndex = useRef(0);
   return (
     <Animated.FlatList
       horizontal={isHorizontal}
       onScroll={Animated.event(
         [{nativeEvent: {contentOffset: {y: scrollRefY, x: scrollRefX}}}],
-        {useNativeDriver: true},
+        {useNativeDriver: true}
       )}
-      decelerationRate={'fast'}
+      onMomentumScrollEnd={(event) => {
+        const {x, y} = event.nativeEvent.contentOffset;
+        const index = isHorizontal
+          ? Math.round(x / itemSize)
+          : Math.round(y / itemSize);
+        if (currentSelectedIndex.current !== index) {
+          currentSelectedIndex.current = index;
+          onSelectItem && onSelectItem(data[index]);
+        }
+      }}
+      decelerationRate={"fast"}
       snapToInterval={itemSize}
       style={styles.flatList}
       contentContainerStyle={[
@@ -46,7 +58,7 @@ const spinner = ({
           : {paddingVertical: itemSpacing},
       ]}
       data={data}
-      keyExtractor={item => JSON.stringify(item)}
+      keyExtractor={(item) => JSON.stringify(item)}
       renderItem={({item, index}) => {
         const inputRange = [
           (index - 1) * itemSize,
@@ -96,7 +108,8 @@ const spinner = ({
                   isHorizontal ? {rotateY} : {rotateX},
                 ],
               },
-            ]}>
+            ]}
+          >
             <ItemView {...item} />
           </Animated.View>
         );

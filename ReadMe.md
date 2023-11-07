@@ -4,7 +4,6 @@
 
 # examples:
 
-![](./assets/videos/1.gif)
 ![](./assets/videos/2.gif)
 ![](./assets/videos/3.gif)
 ![](./assets/videos/4.gif)

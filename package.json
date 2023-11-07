@@ -1,6 +1,6 @@
 {
   "name": "react-native-dynamic-carousel",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A react native custom component of dynamic carousel (horizontal and vertical) with react native animated. can be used as a wheel spinner.",
   "main": "spinner/spinner.tsx",
   "scripts": {
