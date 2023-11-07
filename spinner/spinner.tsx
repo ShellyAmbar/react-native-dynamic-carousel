@@ -17,6 +17,7 @@ const spinner = ({
   itemHorizontalRotationDegreeRange = ["60deg", "0deg", "-60deg"],
   ItemView,
   onSelectItem,
+  initialIndex = 0,
 }: SpinnerProps) => {
   const {width} = Dimensions.get("window");
   const itemSize = isHorizontal
@@ -32,9 +33,21 @@ const spinner = ({
   const scrollRefY = useRef(new Animated.Value(0)).current;
   const scrollRefX = useRef(new Animated.Value(0)).current;
   const currentSelectedIndex = useRef(0);
+  const flatlistRef = useRef(null);
 
   return (
     <Animated.FlatList
+      ref={flatlistRef}
+      initialScrollIndex={initialIndex}
+      onScrollToIndexFailed={(info) => {
+        const wait = new Promise((resolve) => setTimeout(resolve, 50));
+        wait.then(() => {
+          flatlistRef.current?.scrollToOffset({
+            offset: initialIndex * itemSize,
+            animated: true,
+          });
+        });
+      }}
       horizontal={isHorizontal}
       onScroll={Animated.event(
         [{nativeEvent: {contentOffset: {y: scrollRefY, x: scrollRefX}}}],
@@ -58,6 +71,7 @@ const spinner = ({
           : Math.round(y / itemSize);
         if (currentSelectedIndex.current !== index) {
           currentSelectedIndex.current = index;
+
           onSelectItem && onSelectItem(data[index]);
         }
       }}
