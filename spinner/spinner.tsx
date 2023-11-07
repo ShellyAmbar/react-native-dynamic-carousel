@@ -32,6 +32,7 @@ const spinner = ({
   const scrollRefY = useRef(new Animated.Value(0)).current;
   const scrollRefX = useRef(new Animated.Value(0)).current;
   const currentSelectedIndex = useRef(0);
+
   return (
     <Animated.FlatList
       horizontal={isHorizontal}
@@ -39,6 +40,17 @@ const spinner = ({
         [{nativeEvent: {contentOffset: {y: scrollRefY, x: scrollRefX}}}],
         {useNativeDriver: true}
       )}
+      decelerationRate={"fast"}
+      snapToInterval={itemSize}
+      onScrollEndDrag={(e) => {}}
+      style={styles.flatList}
+      contentContainerStyle={[
+        isHorizontal
+          ? {paddingHorizontal: itemSpacing}
+          : {paddingVertical: itemSpacing},
+      ]}
+      data={data}
+      keyExtractor={(item) => JSON.stringify(item)}
       onMomentumScrollEnd={(event) => {
         const {x, y} = event.nativeEvent.contentOffset;
         const index = isHorizontal
@@ -49,16 +61,6 @@ const spinner = ({
           onSelectItem && onSelectItem(data[index]);
         }
       }}
-      decelerationRate={"fast"}
-      snapToInterval={itemSize}
-      style={styles.flatList}
-      contentContainerStyle={[
-        isHorizontal
-          ? {paddingHorizontal: itemSpacing}
-          : {paddingVertical: itemSpacing},
-      ]}
-      data={data}
-      keyExtractor={(item) => JSON.stringify(item)}
       renderItem={({item, index}) => {
         const inputRange = [
           (index - 1) * itemSize,

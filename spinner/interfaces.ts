@@ -12,6 +12,7 @@ type SpinnerProps = {
   itemStyle?: ViewStyle;
   itemHeightPrecentageFromHeight?: number;
   itemwidthPrecentageFromWidth?: number;
+
   ItemView: (props: any) => JSX.Element;
   onSelectItem?: (item: any) => void;
 };
