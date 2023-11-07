@@ -2,7 +2,7 @@
 
 - It comes with a built-in TypeScript typings and is compatible with all popular JavaScript frameworks including React , Vue , Svelte , and Angular . You can use RN-Animated-Donut-Chart directly or leverage well-maintained wrapper packages that allow for a more native integration with your frameworks of choice.
 
-# Semi circular donut chart:
+# examples:
 
 ![](./assets/videos/1.gif)
 ![](./assets/videos/2.gif)
@@ -10,11 +10,6 @@
 ![](./assets/videos/4.gif)
 ![](./assets/videos/5.gif)
 ![](./assets/videos/6.gif)
-
-# Full circular donut chart:
-
-![Screenshot of a Vertical carousel: ](./assets/images/FullCircle.png)
-![ ](./assets/videos/full.gif)
 
 # How to use:
 
