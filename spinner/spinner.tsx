@@ -1,5 +1,5 @@
 import {Animated, Dimensions} from "react-native";
-import React, {useRef} from "react";
+import React, {memo, useCallback, useEffect, useRef} from "react";
 import createStyle from "./spinner.styles";
 import SpinnerProps from "./interfaces";
 
@@ -18,6 +18,7 @@ const spinner = ({
   ItemView,
   onSelectItem,
   initialIndex = 0,
+  startWithHalfSlide = false,
 }: SpinnerProps) => {
   const {width} = Dimensions.get("window");
   const itemSize = isHorizontal
@@ -35,25 +36,42 @@ const spinner = ({
   const currentSelectedIndex = useRef(0);
   const flatlistRef = useRef(null);
 
+  const halfSlide = (forward = true) => {
+    const nextOffset = itemSize * (forward ? 0.8 : 0);
+    return Animated.timing(scrollRefX, {
+      toValue: nextOffset,
+      duration: 500,
+      useNativeDriver: true, // Native driver doesn't support scroll events
+    });
+  };
+
+  const rotateExample = useCallback(() => {
+    halfSlide(true).start(() => {
+      // First half-slide forward completed
+      const time1 = setTimeout(() => {
+        halfSlide(false).start(() => {});
+        clearTimeout(time1);
+      }, 100); // Delay before first backward slide
+    });
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 1 && startWithHalfSlide) {
+      rotateExample();
+    }
+  }, []);
+
   return (
     <Animated.FlatList
       ref={flatlistRef}
       initialScrollIndex={initialIndex}
-      onScrollToIndexFailed={(info) => {
-        const wait = new Promise((resolve) => setTimeout(resolve, 50));
-        wait.then(() => {
-          flatlistRef.current?.scrollToOffset({
-            offset: initialIndex * itemSize,
-            animated: true,
-          });
-        });
-      }}
       horizontal={isHorizontal}
       onScroll={Animated.event(
         [{nativeEvent: {contentOffset: {y: scrollRefY, x: scrollRefX}}}],
         {useNativeDriver: true}
       )}
       decelerationRate={"fast"}
+      scrollEventThrottle={16}
       snapToInterval={itemSize}
       onScrollEndDrag={(e) => {}}
       style={styles.flatList}
@@ -138,4 +156,4 @@ const spinner = ({
   );
 };
 
-export default spinner;
+export default memo(spinner);

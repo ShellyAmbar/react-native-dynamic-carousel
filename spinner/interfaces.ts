@@ -15,5 +15,6 @@ type SpinnerProps = {
   ItemView: (props: any) => JSX.Element;
   onSelectItem?: (item: any) => void;
   initialIndex?: number;
+  startWithHalfSlide?: boolean;
 };
 export default SpinnerProps;

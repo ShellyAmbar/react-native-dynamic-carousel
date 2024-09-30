@@ -59,6 +59,9 @@
         )}
       />
       <Spinner
+        initialIndex={0}
+         onSelectItem={item => {
+        }}
         isHorizontal={false}
         data={data}
         height={height}
@@ -98,3 +101,6 @@
 | itemHeightPrecentageFromHeight    | number                      |
 | itemwidthPrecentageFromWidth      | number                      |
 | ItemView                          | (props: any) => JSX.Element |
+| onSelectItem                      | (item: any) => void         |
+| initialIndex                      | number                      |
+| startWithHalfSlide?               | boolean                     |
